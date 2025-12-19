@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RNKeys - Song to MIDI Converter
+RNKeys - 90s R&B MIDI Pattern Generator
 Main entry point
 """
 

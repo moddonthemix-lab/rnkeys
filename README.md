@@ -1,258 +1,343 @@
-# RNKeys - Song to MIDI Converter
+# RNKeys - 90s R&B MIDI Pattern Generator
 
-Convert any song into playable MIDI files with automatic chord detection and melody extraction. Upload a song and get MIDI keys that match the chords, progressions, and melody!
+> Compete with Timbaland and R. Kelly 🎹🥁🎵
+
+Generate authentic **90s R&B MIDI patterns** with separate tracks for hi-hat, kick, snare/clap, percussion, Rhodes piano chord progressions, and lead synth melodies. All the flavor of classic 90s R&B production, ready to drop into your DAW.
 
 ## Features
 
-- **Automatic Chord Detection**: Analyzes audio to detect chord progressions
-- **Melody Extraction**: Extracts the main melody line and converts it to MIDI notes
-- **Key Detection**: Automatically detects the musical key and mode
-- **Tempo Detection**: Identifies the BPM of your song
-- **Multiple Output Formats**:
-  - Full MIDI (chords + melody)
-  - Chords-only MIDI
-  - Melody-only MIDI
-- **Easy CLI Interface**: Simple command-line tool for quick conversions
+### Drum Patterns
+- **Hi-Hat**: Closed, open, and pedal combinations with swing
+  - Simple, medium, or complex (Timbaland-style) patterns
+  - 16th note grooves with rolls and syncopation
+- **Kick**: Classic R&B and hip-hop patterns
+  - On-beat emphasis (1 and 3)
+  - Syncopated variations
+- **Snare/Clap**: Authentic backbeat with ghost notes
+  - Mix snare and claps for that thick 90s sound
+  - Flams and doubles for extra punch
+- **Percussion**: Shakers, tambourines, and congas
+
+### Musical Elements
+- **Rhodes Piano**: Soulful, jazzy chord progressions
+  - Classic progressions (I-V-vi-IV, vi-IV-I-V, ii-V-I, etc.)
+  - Smooth, gospel, or minimal styles
+  - Major 7ths, minor 7ths, 9th chords, and more
+  - Voice-led inversions for smooth transitions
+
+- **Lead Synth**: Vocal-style melodic lines
+  - Pentatonic scales (major, minor, blues)
+  - Smooth legato or rhythmic variations
+  - Call-and-response patterns
+  - Slides and bends
 
 ## Installation
 
-### Requirements
-
-- Python 3.8 or higher
-- FFmpeg (for audio file support)
-
-### Setup
-
-1. Clone this repository:
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd rnkeys
-```
 
-2. Create a virtual environment (recommended):
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### Installing FFmpeg
+## Quick Start
 
-**Ubuntu/Debian:**
-```bash
-sudo apt-get install ffmpeg
-```
-
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Windows:**
-Download from [ffmpeg.org](https://ffmpeg.org/download.html)
-
-## Usage
-
-### Basic Usage
-
-Convert any audio file to MIDI:
+### Generate a Complete Beat
 
 ```bash
-python rnkeys.py your_song.mp3
+python rnkeys.py
 ```
 
-This will create three MIDI files in the `output/` directory:
-- `your_song_full.mid` - Complete version with chords and melody
-- `your_song_chords.mid` - Chord progression only
-- `your_song_melody.mid` - Melody line only
+This creates `output/rnkeys_beat.mid` with all elements on separate tracks:
+- Track 1: Hi-Hat
+- Track 2: Kick
+- Track 3: Snare/Clap
+- Track 4: Percussion
+- Track 5: Rhodes Piano
+- Track 6: Lead Synth
 
-### Advanced Options
+Load it into your DAW and you're ready to produce!
 
-**Specify custom output directory:**
+## Usage Examples
+
+### Basic Commands
+
 ```bash
-python rnkeys.py song.mp3 -o my_midis/
+# Default 8-bar beat at 95 BPM in C
+python rnkeys.py
+
+# Slow jam in D at 85 BPM
+python rnkeys.py -k D -t 85
+
+# Upbeat track at 110 BPM with 16 bars
+python rnkeys.py -t 110 -b 16
+
+# Minor key with blues scale
+python rnkeys.py -k Am --scale minor_pentatonic
 ```
 
-**Custom output filename:**
+### Style Variations
+
 ```bash
-python rnkeys.py song.mp3 -n mysong
+# Timbaland-style complex hi-hats
+python rnkeys.py --hihat complex
+
+# Gospel-style Rhodes chords
+python rnkeys.py --chords gospel
+
+# Rhythmic, syncopated melody
+python rnkeys.py --melody rhythmic
+
+# Blues scale lead
+python rnkeys.py --scale blues
 ```
 
-**Skip chord detection:**
+### Generate Individual Elements
+
 ```bash
-python rnkeys.py song.mp3 --no-chords
+# Drums only (hi-hat, kick, snare, percussion)
+python rnkeys.py --drums-only
+
+# Rhodes chord progression only
+python rnkeys.py --rhodes-only --chords smooth
+
+# Lead synth melody only
+python rnkeys.py --melody-only --scale major_pentatonic
 ```
 
-**Skip melody extraction:**
+### Export Separate Track Files
+
 ```bash
-python rnkeys.py song.mp3 --no-melody
+# Generate main MIDI + individual files for each track
+python rnkeys.py --separate
 ```
 
-**Adjust chord segment length:**
+This creates:
+- `rnkeys_beat.mid` (all tracks)
+- `rnkeys_beat_hihat.mid`
+- `rnkeys_beat_kick.mid`
+- `rnkeys_beat_snare.mid`
+- `rnkeys_beat_percussion.mid`
+- `rnkeys_beat_rhodes.mid`
+- `rnkeys_beat_lead.mid`
+
+## Command-Line Options
+
+```
+Options:
+  -o, --output PATH               Output MIDI file path
+  -k, --key TEXT                  Musical key (C, D, E, F, G, A, B with # or b)
+  -t, --tempo INTEGER             Tempo in BPM (80-120 recommended)
+  -b, --bars INTEGER              Number of bars to generate
+  --swing FLOAT                   Swing amount (0.0-0.3)
+  --hihat [simple|medium|complex] Hi-hat complexity
+  --kick [rnb|hiphop]            Kick drum style
+  --claps/--no-claps             Mix claps with snare
+  --percussion [shaker|tambourine|conga]
+  --chords [smooth|gospel|minimal] Rhodes chord style
+  --melody [smooth|rhythmic|riff] Lead synth melody style
+  --scale [major_pentatonic|minor_pentatonic|blues]
+  --separate/--no-separate       Export separate track files
+  --drums-only                   Generate drums only
+  --rhodes-only                  Generate Rhodes only
+  --melody-only                  Generate melody only
+  --version                      Show version
+  --help                         Show this message
+```
+
+## Example Workflows
+
+### 1. Slow R&B Ballad
+
 ```bash
-python rnkeys.py song.mp3 --chord-length 4.0
+python rnkeys.py \
+  -k Db -t 72 -b 8 \
+  --swing 0.15 \
+  --hihat simple \
+  --chords smooth \
+  --melody smooth \
+  --scale minor_pentatonic
 ```
 
-**Show help:**
+### 2. Upbeat Timbaland-Style Track
+
 ```bash
-python rnkeys.py --help
+python rnkeys.py \
+  -k G -t 105 -b 16 \
+  --hihat complex \
+  --kick hiphop \
+  --chords gospel \
+  --melody rhythmic
 ```
 
-### Supported Audio Formats
+### 3. Minimal Late-Night Vibe
 
-- MP3
-- WAV
-- FLAC
-- OGG
-- M4A
-- And more (any format supported by FFmpeg)
+```bash
+python rnkeys.py \
+  -k Em -t 88 \
+  --hihat simple \
+  --percussion shaker \
+  --chords minimal \
+  --melody smooth \
+  --scale blues
+```
 
-## How It Works
+### 4. Build Your Own Beat Piece by Piece
 
-1. **Audio Loading**: Loads and preprocesses the audio file
-2. **Key & Tempo Detection**: Analyzes the audio to determine key signature and BPM
-3. **Chord Detection**: Uses chromagram analysis to identify chord progressions
-4. **Melody Extraction**: Employs pitch tracking and Spotify's basic-pitch model to extract melody
-5. **MIDI Generation**: Converts detected musical elements into MIDI format
+```bash
+# Generate drums
+python rnkeys.py --drums-only -o output/drums.mid -t 95 -k C
+
+# Generate chords
+python rnkeys.py --rhodes-only -o output/chords.mid -t 95 -k C
+
+# Generate melody
+python rnkeys.py --melody-only -o output/melody.mid -t 95 -k C
+
+# Import all three into your DAW!
+```
 
 ## Technical Details
 
-### Chord Detection
+### 90s R&B Production Characteristics
 
-The chord detection algorithm uses:
-- Constant-Q Transform (CQT) chromagram
-- Template matching with major, minor, diminished, augmented, and 7th chords
-- Confidence scoring to filter out uncertain detections
-- Automatic merging of consecutive identical chords
+This generator captures authentic 90s R&B elements:
 
-### Melody Extraction
+**Rhythmic Features:**
+- Swing timing (not perfectly straight)
+- Syncopated hi-hat patterns with rolls
+- Kick drums on 1 and 3 with occasional syncopation
+- Snare/clap on 2 and 4 (the backbeat)
+- Ghost notes for humanization
+- Layered snare + clap for thickness
 
-Two methods are available:
-1. **Basic-Pitch** (primary): Spotify's neural network model for accurate audio-to-MIDI conversion
-2. **Librosa** (fallback): Pitch tracking using piptrack for simpler melody extraction
+**Harmonic Features:**
+- Jazzy chord progressions (ii-V-I, I-vi-IV-V)
+- Extended chords (7ths, 9ths, 6ths)
+- Smooth voice leading and inversions
+- Gospel-influenced chord movement
 
-## Example Output
+**Melodic Features:**
+- Pentatonic and blues scales (easy to sing over)
+- Vocal-style phrasing with rests
+- Slides and neighbor tones
+- Call-and-response patterns
 
-```
-============================================================
-RNKeys - Song to MIDI Converter
-============================================================
-Input file: examples/song.mp3
+### MIDI Implementation
 
-[1/5] Loading and analyzing audio...
-Audio loaded: 180.50 seconds, sample rate: 22050 Hz
-Detected tempo: 120.0 BPM
-Detected key: C major
+- **Ticks Per Beat**: 480 (high resolution)
+- **Drum Channel**: Channel 9 (GM standard)
+- **Rhodes**: Program 4 (Electric Piano)
+- **Lead Synth**: Program 81 (Lead Synth)
+- **Velocity Variations**: Humanized velocities for natural feel
+- **Timing**: Micro-timing variations for groove
 
-[2/5] Detecting chord progressions...
-Detected 42 chord segments
+## DAW Integration
 
-Chord Progression:
-    0.00s -   2.00s: C      (confidence: 0.85)
-    2.00s -   4.00s: Am     (confidence: 0.78)
-    4.00s -   6.00s: F      (confidence: 0.82)
-    6.00s -   8.00s: G      (confidence: 0.80)
-    ...
+### Recommended Workflow
 
-[3/5] Extracting melody...
-  Extracted 245 melody notes
+1. **Generate MIDI** with RNKeys
+2. **Import** into your DAW (Ableton, FL Studio, Logic, etc.)
+3. **Assign Sounds**:
+   - Load your favorite drum samples
+   - Use a Rhodes VST (Neo-Soul Keys, Lounge Lizard, etc.)
+   - Add a lead synth (Omnisphere, Serum, etc.)
+4. **Customize**:
+   - Adjust velocities
+   - Add effects (reverb, compression)
+   - Layer additional sounds
+5. **Produce** your 90s R&B masterpiece!
 
-[4/5] Generating MIDI files...
-  Created: output/song_full.mid
-  Created: output/song_chords.mid
-  Created: output/song_melody.mid
+### Compatible with All DAWs
 
-[5/5] Conversion complete!
-============================================================
-Summary:
-  Duration: 180.50 seconds
-  Tempo: 120.0 BPM
-  Key: C major
-  Chords detected: 42
-  Melody notes: 245
-
-Output files:
-  full: output/song_full.mid
-  chords: output/song_chords.mid
-  melody: output/song_melody.mid
-============================================================
-```
-
-## Use Cases
-
-- **Music Production**: Extract chords and melody from reference tracks
-- **Learning**: Analyze songs to understand chord progressions
-- **Cover Songs**: Get MIDI notes to play along with any song
-- **Remixing**: Use extracted MIDI in your DAW
-- **Music Theory**: Study progressions and melodies from your favorite songs
-
-## Troubleshooting
-
-**Issue: "No module named 'basic_pitch'"**
-- Solution: Install with `pip install basic-pitch`
-
-**Issue: "FFmpeg not found"**
-- Solution: Install FFmpeg (see Installation section)
-
-**Issue: Poor chord detection accuracy**
-- Solution: Try adjusting `--chord-length` parameter (2.0-4.0 seconds works best)
-- Clean, well-mixed audio works better than lo-fi or heavily distorted tracks
-
-**Issue: Melody extraction missing notes**
-- Solution: The basic-pitch model works best on monophonic melodies. Complex polyphonic audio may not extract perfectly.
+- Ableton Live
+- FL Studio
+- Logic Pro
+- Pro Tools
+- Cubase
+- Studio One
+- Reaper
+- GarageBand
+- Any DAW that supports MIDI import
 
 ## Project Structure
 
 ```
 rnkeys/
 ├── src/
-│   ├── __init__.py           # Package initialization
-│   ├── audio_processor.py    # Audio loading and analysis
-│   ├── chord_detector.py     # Chord detection logic
-│   ├── melody_extractor.py   # Melody extraction
-│   ├── midi_generator.py     # MIDI file generation
-│   ├── converter.py          # Main conversion orchestrator
-│   └── cli.py               # Command-line interface
-├── output/                   # Generated MIDI files (created automatically)
-├── examples/                 # Example audio files
-├── requirements.txt          # Python dependencies
-├── rnkeys.py                # Main entry point
-└── README.md                # This file
+│   ├── __init__.py            # Package init
+│   ├── drum_generator.py      # Hi-hat, kick, snare, percussion
+│   ├── chord_generator.py     # Rhodes chord progressions
+│   ├── melody_generator.py    # Lead synth melodies
+│   ├── midi_exporter.py       # MIDI file creation
+│   ├── generator.py           # Main orchestrator
+│   └── cli.py                 # Command-line interface
+├── output/                     # Generated MIDI files
+├── requirements.txt            # Dependencies
+├── rnkeys.py                  # Entry point
+└── README.md                  # This file
 ```
+
+## Tips for Best Results
+
+1. **Tempo Sweet Spots**:
+   - Ballads: 70-85 BPM
+   - Mid-tempo R&B: 85-100 BPM
+   - Upbeat jams: 100-115 BPM
+
+2. **Key Choices**:
+   - C, F, G - Classic and bright
+   - Db, Eb, Ab - Smooth and soulful
+   - D, A, E - Energetic
+
+3. **Style Combinations**:
+   - Smooth + Major Pentatonic = Classic R&B
+   - Gospel + Minor Pentatonic = Emotional ballad
+   - Rhythmic + Blues = Funky groove
+
+4. **Layering**:
+   - Generate multiple variations
+   - Layer different patterns
+   - Mix and match elements
 
 ## Contributing
 
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest features
-- Submit pull requests
+Want to add more patterns or improve the generator? Contributions welcome!
+
+1. Fork the repository
+2. Create your feature branch
+3. Make your changes
+4. Submit a pull request
+
+Ideas for contributions:
+- More drum pattern variations
+- Additional chord progressions
+- New percussion sounds
+- Bass line generator
+- Vocal melody generator
+- Preset configurations
+- More scale options
 
 ## License
 
-MIT License
+MIT License - see LICENSE file
 
-## Acknowledgments
+## Credits
 
-- [librosa](https://librosa.org/) - Audio analysis library
-- [basic-pitch](https://github.com/spotify/basic-pitch) - Spotify's audio-to-MIDI model
-- [mido](https://mido.readthedocs.io/) - MIDI file handling
-- [music21](https://web.mit.edu/music21/) - Music theory toolkit
+Inspired by the legendary production of:
+- **Timbaland** - Innovative drums and percussion
+- **R. Kelly** - Soulful melodies and progressions
+- **Teddy Riley** - New Jack Swing pioneers
+- **Jimmy Jam & Terry Lewis** - Smooth R&B production
 
-## Roadmap
+## Support
 
-Future enhancements:
-- [ ] Web interface for drag-and-drop conversion
-- [ ] Better chord recognition (sus chords, extended chords)
-- [ ] Rhythm detection and quantization
-- [ ] Multiple instrument track separation
-- [ ] Real-time audio input support
-- [ ] Export to MusicXML format
-- [ ] Cloud deployment option
+Found a bug? Want a feature? Open an issue!
 
 ---
 
-Made with ♪ by the RNKeys team
+**Make those 90s R&B hits!** 🎵🔥
+
+Load your MIDI into your DAW, add your vocals, and you're ready to create that timeless R&B sound.

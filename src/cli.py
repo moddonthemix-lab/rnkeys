@@ -1,100 +1,203 @@
 #!/usr/bin/env python3
 """
-Command-line interface for RNKeys Song to MIDI Converter
+RNKeys CLI - Generate 90s R&B MIDI patterns
 """
 import click
-import sys
-from pathlib import Path
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from pathlib import Path
 
-from .converter import SongToMIDIConverter
+from .generator import RNKeysGenerator
+from . import __version__
 
 
 console = Console()
 
 
 @click.command()
-@click.argument('audio_file', type=click.Path(exists=True))
 @click.option(
     '-o', '--output',
-    default='output',
-    help='Output directory for MIDI files (default: output/)'
+    default='output/rnkeys_beat.mid',
+    help='Output MIDI file path'
 )
 @click.option(
-    '-n', '--name',
-    default=None,
-    help='Output filename (without extension). Defaults to input filename.'
+    '-k', '--key',
+    default='C',
+    help='Musical key (C, D, E, F, G, A, B with optional # or b)'
 )
 @click.option(
-    '--no-chords',
-    is_flag=True,
-    help='Skip chord detection'
+    '-t', '--tempo',
+    default=95,
+    type=int,
+    help='Tempo in BPM (80-120 recommended for 90s R&B)'
 )
 @click.option(
-    '--no-melody',
-    is_flag=True,
-    help='Skip melody extraction'
+    '-b', '--bars',
+    default=8,
+    type=int,
+    help='Number of bars to generate'
 )
 @click.option(
-    '--chord-length',
-    default=2.0,
+    '--swing',
+    default=0.1,
     type=float,
-    help='Length of chord segments in seconds (default: 2.0)'
+    help='Swing amount (0.0-0.3)'
+)
+@click.option(
+    '--hihat',
+    default='medium',
+    type=click.Choice(['simple', 'medium', 'complex']),
+    help='Hi-hat complexity'
+)
+@click.option(
+    '--kick',
+    default='rnb',
+    type=click.Choice(['rnb', 'hiphop']),
+    help='Kick drum style'
+)
+@click.option(
+    '--claps/--no-claps',
+    default=True,
+    help='Mix claps with snare'
+)
+@click.option(
+    '--percussion',
+    default='shaker',
+    type=click.Choice(['shaker', 'tambourine', 'conga']),
+    help='Percussion type'
+)
+@click.option(
+    '--chords',
+    default='smooth',
+    type=click.Choice(['smooth', 'gospel', 'minimal']),
+    help='Rhodes chord style'
+)
+@click.option(
+    '--melody',
+    default='smooth',
+    type=click.Choice(['smooth', 'rhythmic', 'riff']),
+    help='Lead synth melody style'
+)
+@click.option(
+    '--scale',
+    default='major_pentatonic',
+    type=click.Choice(['major_pentatonic', 'minor_pentatonic', 'blues']),
+    help='Melody scale'
+)
+@click.option(
+    '--separate/--no-separate',
+    default=False,
+    help='Export separate MIDI files for each track'
+)
+@click.option(
+    '--drums-only',
+    is_flag=True,
+    help='Generate drums only (no chords or melody)'
+)
+@click.option(
+    '--rhodes-only',
+    is_flag=True,
+    help='Generate Rhodes chords only'
+)
+@click.option(
+    '--melody-only',
+    is_flag=True,
+    help='Generate lead melody only'
 )
 @click.option(
     '--version',
     is_flag=True,
-    help='Show version information'
+    help='Show version'
 )
-def main(audio_file, output, name, no_chords, no_melody, chord_length, version):
+def main(
+    output, key, tempo, bars, swing, hihat, kick, claps, percussion,
+    chords, melody, scale, separate, drums_only, rhodes_only, melody_only, version
+):
     """
-    RNKeys - Convert audio files to MIDI with chord progressions and melody
+    RNKeys - 90s R&B MIDI Pattern Generator
 
     \b
-    Usage:
-        rnkeys song.mp3
-        rnkeys song.wav -o my_output/ -n my_song
-        rnkeys song.mp3 --no-chords
-        rnkeys song.mp3 --chord-length 4.0
+    Generate authentic 90s R&B drum patterns, Rhodes progressions, and lead synths.
+    Compete with Timbaland and R. Kelly!
 
     \b
-    Supported formats: MP3, WAV, FLAC, OGG, M4A
+    Examples:
+        # Generate a complete beat
+        rnkeys
+
+        # Slow jam in D minor
+        rnkeys -k D -t 85 --scale minor_pentatonic --chords smooth
+
+        # Upbeat jam with complex hi-hats
+        rnkeys -t 110 --hihat complex --melody rhythmic
+
+        # Drums only (no melody/chords)
+        rnkeys --drums-only
+
+        # Export all tracks separately
+        rnkeys --separate
+
+        # Gospel-style Rhodes in F
+        rnkeys -k F --rhodes-only --chords gospel
     """
 
     if version:
-        from . import __version__
         console.print(f"RNKeys version {__version__}")
         return
 
-    # Validate inputs
-    if no_chords and no_melody:
-        console.print("[red]Error: Cannot disable both chords and melody![/red]")
-        sys.exit(1)
-
     try:
-        # Create converter
-        converter = SongToMIDIConverter(output_dir=output)
-
-        # Run conversion
-        results = converter.convert(
-            audio_file=audio_file,
-            output_name=name,
-            include_chords=not no_chords,
-            include_melody=not no_melody,
-            chord_segment_length=chord_length
+        # Create generator
+        generator = RNKeysGenerator(
+            key=key,
+            tempo=tempo,
+            bars=bars,
+            swing=swing
         )
 
-        console.print("\n[green]✓ Conversion successful![/green]")
+        # Generate based on mode
+        if drums_only:
+            console.print("[cyan]Generating drums only...[/cyan]\n")
+            generator.generate_drums_only(
+                output_path=output,
+                hihat_complexity=hihat,
+                kick_style=kick,
+                use_claps=claps,
+                percussion_type=percussion
+            )
+        elif rhodes_only:
+            console.print("[cyan]Generating Rhodes chords only...[/cyan]\n")
+            generator.generate_rhodes_only(
+                output_path=output,
+                style=chords
+            )
+        elif melody_only:
+            console.print("[cyan]Generating lead melody only...[/cyan]\n")
+            generator.generate_melody_only(
+                output_path=output,
+                style=melody,
+                scale=scale
+            )
+        else:
+            # Complete beat
+            generator.generate_complete_beat(
+                output_path=output,
+                hihat_complexity=hihat,
+                kick_style=kick,
+                use_claps=claps,
+                percussion_type=percussion,
+                chord_style=chords,
+                melody_style=melody,
+                melody_scale=scale,
+                separate_tracks=separate
+            )
 
-    except FileNotFoundError as e:
-        console.print(f"[red]Error: {e}[/red]")
-        sys.exit(1)
+        console.print("\n[green]✓ MIDI generation successful![/green]")
+        console.print(f"\nLoad these MIDI files into your DAW and add that 90s R&B flavor! 🎹🥁🎵")
+
     except Exception as e:
-        console.print(f"[red]Error during conversion: {e}[/red]")
+        console.print(f"[red]Error: {e}[/red]")
         import traceback
         traceback.print_exc()
-        sys.exit(1)
+        exit(1)
 
 
 if __name__ == '__main__':
