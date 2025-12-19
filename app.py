@@ -60,14 +60,21 @@ def generate():
 
         hihat = data.get('hihat', 'medium')
         kick = data.get('kick', 'rnb')
-        claps = data.get('claps', 'true').lower() == 'true'
+
+        # Handle boolean values (can be bool or string)
+        claps_val = data.get('claps', True)
+        claps = claps_val if isinstance(claps_val, bool) else str(claps_val).lower() == 'true'
+
         percussion = data.get('percussion', 'shaker')
 
         chords = data.get('chords', 'smooth')
         melody = data.get('melody', 'smooth')
         scale = data.get('scale', 'major_pentatonic')
 
-        separate = data.get('separate', 'false').lower() == 'true'
+        # Handle boolean values (can be bool or string)
+        separate_val = data.get('separate', False)
+        separate = separate_val if isinstance(separate_val, bool) else str(separate_val).lower() == 'true'
+
         mode = data.get('mode', 'complete')  # complete, drums, rhodes, melody
 
         # Generate unique filename
