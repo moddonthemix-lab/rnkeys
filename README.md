@@ -2,7 +2,11 @@
 
 > Compete with Timbaland and R. Kelly 🎹🥁🎵
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+
 Generate authentic **90s R&B MIDI patterns** with separate tracks for hi-hat, kick, snare/clap, percussion, Rhodes piano chord progressions, and lead synth melodies. All the flavor of classic 90s R&B production, ready to drop into your DAW.
+
+**🌐 Web App + CLI Available!**
 
 ## Features
 
@@ -31,7 +35,28 @@ Generate authentic **90s R&B MIDI patterns** with separate tracks for hi-hat, ki
   - Call-and-response patterns
   - Slides and bends
 
-## Installation
+## Installation & Usage
+
+### Option 1: Web App (Easiest!)
+
+**Deploy to Railway in 1 click:**
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+
+1. Click the button above
+2. Connect your GitHub
+3. Get your live URL in 2 minutes!
+
+**Or run locally:**
+```bash
+pip install -r requirements.txt
+python app.py
+```
+Then visit `http://localhost:5000` in your browser!
+
+See [DEPLOY.md](DEPLOY.md) for detailed deployment instructions.
+
+### Option 2: CLI (Command Line)
 
 ```bash
 # Clone the repository
@@ -40,9 +65,12 @@ cd rnkeys
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Generate a beat
+python rnkeys.py
 ```
 
-## Quick Start
+## Quick Start - CLI
 
 ### Generate a Complete Beat
 
