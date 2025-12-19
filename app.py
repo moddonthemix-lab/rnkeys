@@ -17,10 +17,14 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-UPLOAD_FOLDER = 'output/web'
-Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'output', 'web')
+# Ensure directory exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
+
+print(f"Output folder: {UPLOAD_FOLDER}")
+print(f"Output folder exists: {os.path.exists(UPLOAD_FOLDER)}")
 
 # Cleanup old files periodically
 def cleanup_old_files():
@@ -158,6 +162,10 @@ def download_file(filename):
     """Download a generated MIDI file"""
     try:
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        print(f"Download requested: {filename}")
+        print(f"Looking for file at: {file_path}")
+        print(f"File exists: {os.path.exists(file_path)}")
+
         if os.path.exists(file_path):
             return send_file(
                 file_path,
@@ -166,8 +174,17 @@ def download_file(filename):
                 mimetype='audio/midi'
             )
         else:
-            return jsonify({'error': 'File not found'}), 404
+            # List files in directory for debugging
+            try:
+                files = os.listdir(app.config['UPLOAD_FOLDER'])
+                print(f"Files in directory: {files}")
+            except:
+                pass
+            return jsonify({'error': f'File not found: {filename}'}), 404
     except Exception as e:
+        print(f"Download error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 
